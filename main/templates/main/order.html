@@ -1,0 +1,36 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+ {% load crispy_forms_filters %}
+<div class="container justify-content-center text-center w-25">
+	<div class="  justify-content-center text-center row shadow card mt-5 p-2">
+		<h1>Order</h1>
+		<form method="POST" class="" >
+			{% csrf_token %}
+		  <div class=" col form-group m-2">
+		    {{form.delivery_address|as_crispy_field }}
+		  </div>
+		  <div class=" col form-group m-2">
+		  		{{form.notes|as_crispy_field }}
+		  </div>
+		  <div>
+		  	<h4>Order info:</h4>
+		  		<h5>Restaurant: {{cart.restaurant.name}}</h5>
+		  		<br>
+		  		<h5>Products</h5>
+
+		  		{% for package in Packages %}
+		  			
+		  			<h6>- {{package.FoodIteminPackage.name}} x {{package.quantity}}</h6> 
+		  			
+		  		{% endfor %}
+		  		<br>
+		  		<h5>Cash Only</h5>
+		  		<h5>{{cart.total_price}} PLN</h5>
+		  </div>
+		  <button type="submit" class="btn text-white orange-background">Order</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+	<div class=" ">
+		<nav class="navbar  navbar-expand-lg navbar-light shadow-sm cont">
+			<div class="container">
+				<div class="	container rounded-lg m-3">
+						<div class="row no-gutters m-1 container">
+								<div class="col-auto">
+									<a href="/menu/Restaurant/{{Restaurant.name}}" class="text-decoration-none text-reset ">
+										<img class="card-img-top col photo" src="/media/{{Restaurant.image}}">
+									</a>
+								</div>
+								<div class="col">
+									<div class="card-block">
+										<h1 class="card-title">{{Restaurant.name}}</h1>
+										{% for positiveStar in Restaurant.positiveStars %}
+											<span class="fa fa-star checked"></span>
+										{%endfor%}
+										{% for negativeStar in Restaurant.negativeStars %}
+											<span class="fa fa-star"></span>
+										{%endfor%}
+										<span>{{Restaurant.rating}}</span>
+										<span>({{Restaurant.total_reviews}}) <a class="orange" href="/menu/Restaurant/{{Restaurant.name}}/Reviews">Check Reviews</a> </span>
+										<p class="card-text text-break">{{Restaurant.description}}</p>
+									</div>
+								</div>
+						</div>
+				</div>
+			</div>
+		</nav>
+		<div class="m-5 mt-2">
+			<div class="row justify-content-end">
+				<div class=" col-8">
+					<div class="row">
+						<div class="col-3 m-3">
+							<div class="card ">
+								<form method="GET" class="m-2">
+									<h5 class="m-1">Sort By:</h5>
+									<select onchange='if(this.value != 0) { this.form.submit(); }' id="sort" name="sort" class="m-1">
+										<option value="Reviews"></option>
+										<option value="Price Ascending">Price Ascending</option>
+										<option value="Price Descending">Price Descending</option>
+										<option value="Name">Name</option>
+									</select>
+								</form>
+							</div>
+						</div>
+						<div class="col-8 ">
+							<h1 class="m-3">Food</h1>
+							{%for FoodItem in FoodItems%}
+								
+									<div class="card rounded-lg m-3 align-middle">
+												<div class="row no-gutters m-1">
+														<div class="col-auto">
+																<img class="card-img-top col photo" src="/media/{{FoodItem.image}}">
+														</div>
+														<div class="col">
+																<div class="card-block">
+																		<h4 class="card-title">{{FoodItem.name}}</h4>
+																		<h5 name="bruv{{FoodItem.id}}" class="card-text text-break ">{{FoodItem.price}} PLN</h5>
+																		<p class="card-text text-break">{{FoodItem.description}}</p>
+																</div>
+														</div>
+														<div class="col-3  right card-block">
+																
+																<div id='myform' method='POST' class='quantity' action=''>
+																	<div class="text-center p-0 ">
+																		
+																		<input type='button' value='-' class='qtyminus minus p-0 m-2 btn text-white orange-background' field='quantity' />
+																		<input type='text' name='quantity' value='1' class='id{{FoodItem.id}} qty quanityOfItems' />
+																		<input type='button' value='+' class='qtyplus plus m-2 p-0 btn text-white orange-background' field='quantity' />
+																	</div>
+																	<button value="{{FoodItem.id}}" name='{{FoodItem.name}}' id="{{Restaurant.name}}" class="m-2 btn text-white orange-background AddToCart">Add To Cart</button>
+
+																</div>
+																
+														</div>
+												</div>
+										</div>
+									
+								{%endfor%}
+							</div>
+						</div>
+				</div>
+				<div class="cartdiv   text-break  col-2 p-1 shadow-sm">
+					<div class="text-center">
+						<h3>Cart</h3>
+						<form action="/menu/Restaurant/{{Restaurant.name}}/Order" class="order" method="POST">
+							{% csrf_token %}
+							<button type="submit" name="0" class="h1 buttonorder m-2 btn text-white orange-background w-75 font-weight-bold">Order</button>
+						</form>
+						<h4 class="text-break cartInfo">Add Food Items to your Cart</h4>
+
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+	
+	 jQuery(document).ready(($) => {
+				$('.quantity').on('click', '.plus', function(e) {
+						let $input = $(this).prev('input.qty');
+						var val = parseInt($input.val());
+						$input.val( val+1 ).change();
+				});
+ 
+				$('.quantity').on('click', '.minus', 
+						function(e) {
+						let $input = $(this).next('input.qty');
+						var val = parseInt($input.val());
+						if (val > 1) {
+								$input.val( val-1 ).change();
+						} 
+				});
+		});
+
+	$(document).ready(function() {
+				$('.AddToCart').click(function(){
+					let foodName = $(this).attr('name');
+					let id = $(this).attr('value');
+
+					let foodPrice = document.getElementsByName('bruv'+id)[0].textContent;
+
+					let cartprice = parseInt($('.buttonorder').attr('name'));
+					
+					let NumberOfItems = $('.id'+id).val();
+
+					cartprice += (parseInt(foodPrice)*NumberOfItems);
+					//alert(cartprice)
+					//alert(cartprice)
+					
+
+					let FullPrice = (parseInt(foodPrice)*NumberOfItems);
+
+
+					let realid = JSON.stringify($(this).attr('id'))
+					realid = realid.replaceAll('"', "'")
+
+
+					let realname = JSON.stringify($(this).attr('name'))
+					realname = realname.replaceAll('"', "'")
+
+					
+					$.ajax({
+							 type: "POST",
+							 url: "/menu/cart/addToCart/",
+							 data: {'restaurantName': $(this).attr('id'),'FoodItemName': $(this).attr('name'),'NumberOfItems': NumberOfItems, 'cartprice':cartprice,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+							 dataType: "json",
+							 success: function(response) {
+							 	document.getElementsByClassName('cartInfo')[0].style.display = 'none';
+							 	document.getElementsByClassName('order')[0].style.display = 'block';
+							 	let bruv =
+							 	'<div class="   card borderorange rounded-lg m-3 align-middle"><div class="row no-gutters m-1 justify-content-between"><div class="col"><div class="card-block"><h6 class="card-title  text-left">'+foodName+'</h6><p class="card-text text-break d-flex">'+foodPrice+' x '+NumberOfItems+'</p></div></div><div class="col-3 align-middle "><input onclick="deletediv(this,'+realid+','+realname+','+NumberOfItems+','+FullPrice+');" type="button" name='+id+' value="-" class="deletefood m-2 btn text-white orange-background"></div></div></div>'
+							 	
+								 $('.cartdiv').append(bruv);
+								 
+								 $('.buttonorder').text("Order ("+cartprice+" PLN)");
+								 $('.buttonorder').attr("name",cartprice);  
+								 
+								}
+						});
+				})
+				
+			});
+function deletediv(obj,restaurantName,FoodItemName,NumberOfItems,FullPrice){
+					let cartprice = document.getElementsByClassName('buttonorder')[0].getAttribute("name");
+					//obj.parentElement.parentElement.parentElement.remove();
+					
+					$.ajax({
+							 type: "POST",
+							 url: "/menu/cart/deleteFromCart/",
+							 data: {'restaurantName': restaurantName,'FoodItemName': FoodItemName,'NumberOfItems': NumberOfItems, 'cartprice':cartprice, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+							 dataType: "json",
+							 success: function(response) {
+							 	
+
+							 	obj.parentElement.parentElement.parentElement.remove();
+
+
+
+							 	document.getElementsByClassName('buttonorder')[0].innerHTML = "Order ("+(cartprice-FullPrice)+" PLN)";
+								document.getElementsByClassName('buttonorder')[0].setAttribute("name",cartprice-FullPrice);  
+						
+								
+								 
+								 
+								 
+								}
+						});
+				}
+</script>
+
+{% endblock %}

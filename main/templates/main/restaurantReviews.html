@@ -1,0 +1,105 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<div class=" ">
+	<nav class="navbar  navbar-expand-lg navbar-light shadow-sm cont">
+		<div class="container">
+			<div class="	container rounded-lg m-3">
+					<div class="row no-gutters m-1 container">
+							<div class="col-auto">
+								<a href="/menu/Restaurant/{{Restaurant.name}}" class="text-decoration-none text-reset ">
+									<img class="card-img-top col photo" src="/media/{{Restaurant.image}}">
+								</a>
+							</div>
+							<div class="col">
+									<div class="card-block">
+											<h1 class="card-title">{{Restaurant.name}}</h1>
+											{% for positiveStar in Restaurant.positiveStars %}
+								<span class="fa fa-star checked"></span>
+							{%endfor%}
+							{% for negativeStar in Restaurant.negativeStars %}
+								<span class="fa fa-star"></span>
+							{%endfor%}
+							<span>{{Restaurant.rating}}</span>
+						<span>({{Restaurant.total_reviews}})</span>
+											<p class="card-text text-break">{{Restaurant.description}}</p>
+									</div>
+							</div>
+					</div>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col-3 m-3">
+				<div class="card ">
+					<form method="GET" class="m-2">
+						<h5 class="m-1">Sort By:</h5>
+						<select onchange='if(this.value != 0) { this.form.submit(); }' id="sort" name="sort" class="m-1">
+							<option value="Reviews"></option>
+							<option value="Highest">Highest</option>
+							<option value="Lowest">Lowest</option>
+						</select>
+					</form>
+				</div>
+			</div>
+			<div class="col-8 ">
+				<h1 class="m-3 text-center">Reviews</h1>
+
+				<form method = "post" class="row text-center" oninput="x.value=parseInt(a.value)">
+					{% if hasUserPostedReview == True %}
+						<h3>Edit your review</h3>
+					{% else %}
+						<h3>Post your review</h3>
+					{% endif %}
+					
+					<div class="">
+						{% csrf_token %}
+						{{form.as_p}}
+						<output name="x" for="a b">5</output><span class="fa fa-star checked"></span><br>
+						<input class="orange-background" type="range" id="a" name="a" value="5" min="1" max="5">
+						<div>
+							{% if hasUserPostedReview == True %}
+								<button type="submit"  class=" buttonorder btn text-white orange-background w-25 font-weight-bold">Edit</button>
+							{% else %}
+								<button type="submit"  class=" buttonorder btn text-white orange-background w-25 font-weight-bold">Post Review</button>
+							{% endif %}
+							
+						</div>
+						
+					</div>
+				</form>
+				
+				{%for Review in RestaurantReviews%}
+					
+					<div class="card rounded-lg m-3">
+				        <div class="row no-gutters m-1">
+				            <div class="col">
+				                <div class="card-block justify-content-start">
+				                	<div class=" d-flex mb-0">
+				                		<h4 class="col card-title">{{Review.user}}</h4>
+				                		<div class="col text-right"><p class="card-text text-right"></div>{{Review.review_date|date:"SHORT_DATE_FORMAT"}}</p>
+				                    	
+				                	</div>
+				                    {% for positiveStar in Review.positiveStars %}
+							    		<span class="fa fa-star checked"></span>
+							    	{%endfor%}
+							    	{% for negativeStar in Review.negativeStars %}
+							    		<span class="fa fa-star"></span>
+							    	{%endfor%}
+				                    
+				                    <p class="card-text text-break">{{Review.review_text}}</p>
+				                </div>
+				            </div>
+				        </div>
+				    </div>
+				    
+			    {%endfor%}
+		    </div>
+	    </div>
+	</div>
+</div>
+
+
+
+{% endblock %}

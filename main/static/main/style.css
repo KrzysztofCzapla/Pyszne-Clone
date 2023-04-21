@@ -1,0 +1,69 @@
+.orange {
+    color: rgb(254, 126, 0)!important;
+}
+.orange-background {
+    background-color: rgb(254, 126, 0)!important;
+}
+.controls ul,.asteriskField, #hint_id_username{
+            display:none;
+        }
+.help-block, .alert{
+    color: darkred;
+}
+.hover {
+  --s: 0.1em;   /* the thickness of the line */
+  --c: rgb(254, 126, 0); /* the color */
+  
+  color: #0000;
+  padding-bottom: var(--s);
+  background: 
+    linear-gradient(90deg,var(--c) 50%,#000 0) calc(100% - var(--_p,0%))/200% 100%,
+    linear-gradient(var(--c) 0 0) 0% 100%/var(--_p,0%) var(--s) no-repeat;
+  -webkit-background-clip: text,padding-box;
+          background-clip: text,padding-box;
+  transition: 0.5s;
+}
+.hover:hover {
+  --_p: 100%
+}
+
+.orange_active {
+    color: rgb(254, 126, 0)!important;
+    text-decoration-color: rgb(254, 126, 0)!important;
+    text-decoration: underline!important;
+    text-underline-offset: 8px;
+}
+.photo {
+
+    width: 100px!important; height: 100px!important;
+}
+.photosmall {
+
+    width: 50px!important; height: 50px!important;
+}
+.checked {
+  color: orange;
+}
+#myform {
+    text-align: center;
+
+    margin: 2%;
+}
+.qty {
+    width: 40px;
+    height: 25px;
+    text-align: center;
+}
+.borderorange {
+    border-color: rgb(254, 126, 0)!important;
+}
+
+input.qtyplus { width:25px; height:25px;}
+input.qtyminus { width:25px; height:25px;}
+
+.order {
+    display: none;
+}
+#error_1_id_delivery_address,#error_1_id_notes {
+    display: none;
+}

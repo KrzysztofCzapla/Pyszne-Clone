@@ -1,0 +1,28 @@
+{% extends "main/base.html" %}
+{%block content %}
+{% load crispy_forms_tags %}
+ {% load crispy_forms_filters %}
+
+<div class="  w-50  mx-auto mt-5 " >
+	<form method="post" class="container d-flex justify-content-center p-2">
+		<div class="text-center shadow card m-2 p-5">
+			<h1>Register</h1>
+			{% csrf_token %}
+			<div class=" ">
+		      <div class="m-2">
+		        {{ form.username|as_crispy_field }}
+		      </div>
+		      <div class="m-2">
+		        {{ form.password1|as_crispy_field }}
+		      </div>
+		      <div class="m-2">
+		        {{ form.password2|as_crispy_field }}
+		      </div>
+		    </div>
+		    <button type="submit" class="m-2 btn text-white orange-background">Register</button>
+			<p style="" >have account? <a class="button-2" href="/login">Login</a></p>
+			
+		</div>
+	</form>
+</div>
+{%endblock%}
