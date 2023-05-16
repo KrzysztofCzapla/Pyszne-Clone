@@ -5,7 +5,7 @@ Simple Just-Eat/Pyszne.pl clone done in Django, Python.
 
 To use you need to use docker:
 1) Have Docker running
-2) open cmd and type: docker build .
+2) open powershell and type: docker build .
 3) Then: docker-compose up
 
 Uses:
